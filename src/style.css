@@ -313,6 +313,12 @@ textarea {
   inset: 0;
   overflow: hidden;
   z-index: 2;
+  pointer-events: none;
+}
+
+#windows-layer .win,
+#windows-layer .win-resize {
+  pointer-events: auto;
 }
 
 .win {
