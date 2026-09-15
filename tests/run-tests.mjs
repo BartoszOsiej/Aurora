@@ -350,6 +350,29 @@ test('shell: redirection captures output to file', () => {
   assert(fs.readFile('/home/user/out.txt').includes('saved'), 'file contains output');
 });
 
+test('shell: find searches recursively by name', () => {
+  const { shell, lines, ctx } = mkShell();
+  const fs = freshFS();
+  fs.mkdir('/home/user/docs');
+  fs.mkdir('/home/user/docs/deep');
+  fs.writeFile('/home/user/docs/deep/report.txt', 'x');
+  fs.writeFile('/home/user/todo.txt', 'x');
+  runCommand('find /home/user -name report', shell, fs, ctx);
+  const out = lines.join('\n');
+  assert(out.includes('/home/user/docs/deep/report.txt'), 'nested file found');
+  assert(!out.includes('todo.txt'), 'non-matching file skipped');
+  assert(lines.some((l) => l.includes('1 match')), 'match count reported');
+});
+
+test('shell: find usage error and missing start dir', () => {
+  const { shell, lines, ctx } = mkShell();
+  const fs = freshFS();
+  runCommand('find /nope -name x', shell, fs, ctx);
+  assert(lines.some((l) => l.includes('no such file or directory')), 'missing dir reported');
+  runCommand('find /home/user', shell, fs, ctx);
+  assert(lines.some((l) => l.includes('usage:')), 'usage printed');
+});
+
 /* --------------------------------------------------------------- summary */
 
 console.log(`\nAURORA OS core tests: ${passed} passed, ${failed} failed`);

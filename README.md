@@ -60,7 +60,7 @@ dependencies**. No frameworks, no bundler at runtime, no server.*
 | 🧠 **Kernel** | Animated boot sequence, typed EventBus, process table, settings, localStorage persistence |
 | 🪟 **Window manager** | Drag, resize (8 handles), minimize/maximize, cascading placement, glassmorphism chrome |
 | 📂 **Virtual filesystem** | POSIX-inspired: `ls`/`cd`/`cat`/`mkdir -p`/`cp`/`mv`/`rm -r`/`grep`/`tree`, error codes |
-| ⌨️ **Terminal** | 35+ commands, command history, Tab completion, output redirection, ANSI colors |
+| ⌨️ **Terminal** | 36+ commands, command history, Tab completion, output redirection, ANSI colors |
 | 📱 **Apps** | Files, Terminal, Editor, Calculator, Paint (save PNG), System Monitor, Settings, About |
 | 🎨 **Theming** | 5 themes (Aurora, Midnight, Ember, Forest, Daylight) + 5 animated wallpapers |
 | 🔊 **Audio** | Fully procedural WebAudio — boot chime, UI clicks, window swooshes. No audio files. |
@@ -92,7 +92,7 @@ npm run serve        # http://localhost:8080
 ## First Steps Inside the OS
 
 1. Double-click **Terminal** on the desktop (or use the Start menu ◈)
-2. Type `help` to list all 35+ commands
+2. Type `help` to list all 36+ commands
 3. `neofetch` for the system banner, `fortune` for wisdom
 4. Create files: `echo hello > hello.txt`, then `cat hello.txt`
 5. `open editor hello.txt` to edit graphically
@@ -141,7 +141,7 @@ aurora-os/
 │   ├── style.css           # Complete OS stylesheet
 │   ├── core/               # EventBus, ProcessManager, WindowManager, AppRegistry
 │   ├── fs/                 # Virtual file system
-│   ├── term/               # Interactive shell (35+ commands)
+│   ├── term/               # Interactive shell (36+ commands)
 │   ├── apps/               # Terminal, Files, Editor, Calculator, Paint, Monitor, Settings, About
 │   └── sound/              # Procedural WebAudio sound effects
 ├── tests/                  # Core-logic test harness (no DOM)

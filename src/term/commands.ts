@@ -251,6 +251,37 @@ export function buildCommands(): CmdDef[] {
   });
 
   def({
+    name: 'find',
+    usage: 'find <start-dir> -name <pattern>',
+    desc: 'Recursively search for files/dirs by name substring',
+    run(args, s, fs) {
+      let start = '.';
+      let pattern = '';
+      const rest = [...args];
+      if (rest[0] && rest[0] !== '-name') { start = rest.shift() as string; }
+      const nameIdx = rest.indexOf('-name');
+      if (nameIdx === -1 || !rest[nameIdx + 1]) {
+        s.print('usage: find <start-dir> -name <pattern>');
+        return;
+      }
+      pattern = rest[nameIdx + 1];
+      const base = fs.resolve(start, s.cwd);
+      if (!fs.exists(base)) { s.print(`find: ${start}: no such file or directory`); return; }
+      let hits = 0;
+      const walk = (dir: string) => {
+        for (const entry of fs.readDir(dir)) {
+          const full = dir === '/' ? `/${entry.name}` : `${dir}/${entry.name}`;
+          if (entry.name.includes(pattern)) { s.print(full); hits++; }
+          if (entry.kind === 'dir') walk(full);
+        }
+      };
+      if (base.split('/').pop()!.includes(pattern)) { s.print(base); hits++; }
+      walk(base);
+      s.print(`— ${hits} match${hits === 1 ? '' : 'es'}`);
+    },
+  });
+
+  def({
     name: 'grep',
     usage: 'grep <pattern> <file>',
     desc: 'Search a file for a pattern',
