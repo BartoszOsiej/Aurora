@@ -34,11 +34,11 @@ export function saveSettings(s: SettingsState): void {
 }
 
 export const THEMES = [
-  { id: 'aurora', name: 'Aurora', accent: '#818cf8', acc2: '#e879f9', bg: '#0b0f1e' },
-  { id: 'midnight', name: 'Midnight', accent: '#38bdf8', acc2: '#818cf8', bg: '#020617' },
+  { id: 'aurora', name: 'Aurora', accent: '#F15A24', acc2: '#DA2C38', bg: '#050505' },
+  { id: 'midnight', name: 'Midnight', accent: '#38bdf8', acc2: '#F15A24', bg: '#020617' },
   { id: 'ember', name: 'Ember', accent: '#f97316', acc2: '#ef4444', bg: '#1c0a05' },
-  { id: 'forest', name: 'Forest', accent: '#4ade80', acc2: '#22d3ee', bg: '#04140c' },
-  { id: 'light', name: 'Daylight', accent: '#6366f1', acc2: '#a855f7', bg: '#eef2ff' },
+  { id: 'forest', name: 'Forest', accent: '#4ade80', acc2: '#8b95a8', bg: '#04140c' },
+  { id: 'light', name: 'Daylight', accent: '#d94e1f', acc2: '#DA2C38', bg: '#eef2ff' },
 ];
 
 export const WALLPAPERS = ['aurora', 'grid', 'mountains', 'waves', 'dots'];
@@ -79,7 +79,7 @@ export function createSettingsApp(ctx: AppContext): HTMLElement {
   for (const w of WALLPAPERS) {
     const b = document.createElement('button');
     b.className = 'settings-option';
-    b.style.borderColor = settings.wallpaper === w ? '#818cf8' : 'transparent';
+    b.style.borderColor = settings.wallpaper === w ? '#F15A24' : 'transparent';
     b.textContent = w[0].toUpperCase() + w.slice(1);
     b.addEventListener('click', () => {
       settings.wallpaper = w;

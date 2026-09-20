@@ -4,7 +4,7 @@
 
 import type { AppContext } from '../core/AppRegistry';
 
-const PALETTE = ['#ffffff', '#000000', '#ef4444', '#f97316', '#facc15', '#22c55e', '#06b6d4', '#3b82f6', '#8b5cf6', '#ec4899', '#94a3b8', '#78350f'];
+const PALETTE = ['#ffffff', '#000000', '#ef4444', '#f97316', '#facc15', '#22c55e', '#06b6d4', '#3b82f6', '#F15A24', '#ec4899', '#94a3b8', '#78350f'];
 
 export function createPaintApp(_ctx: AppContext): HTMLElement {
   const body = document.createElement('div');

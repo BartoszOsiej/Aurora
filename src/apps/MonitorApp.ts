@@ -98,7 +98,7 @@ export function createMonitorApp(ctx: AppContext): HTMLElement {
     memHist.push(Math.min(100, (mem / (400 * 1024)) * 100 + 22));
     if (cpuHist.length > 60) cpuHist.shift();
     if (memHist.length > 60) memHist.shift();
-    drawGraph(cpuCtx, cpuHist, '#818cf8');
+    drawGraph(cpuCtx, cpuHist, '#F15A24');
     drawGraph(memCtx, memHist, '#34d399');
     renderProcTable();
     stats.textContent = `uptime ${Math.floor((Date.now() - (ctx.processes.list()[0]?.startedAt ?? Date.now())) / 1000)}s · ${procs.length} processes · ${(mem / 1024).toFixed(0)} MB used`;
