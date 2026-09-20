@@ -6,16 +6,16 @@
 /* ---------- tokens ---------- */
 
 :root {
-  --bg: #0b0f1e;
-  --bg2: #0f1528;
+  --bg: #050505;
+  --bg2: #0a0a10;
   --panel: rgba(23, 30, 54, 0.82);
   --panel2: rgba(30, 38, 68, 0.92);
   --border: rgba(148, 163, 184, 0.16);
   --text: #e6eaf6;
   --muted: #8b94ad;
-  --acc: #818cf8;
-  --acc2: #e879f9;
-  --font: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --acc: #F15A24;
+  --acc2: #DA2C38;
+  --font: 'JetBrains Mono', 'JetBrains Mono', system-ui, -apple-system, sans-serif;
   --mono: 'JetBrains Mono', 'Cascadia Code', ui-monospace, 'SF Mono', Menlo, monospace;
 }
 
@@ -95,7 +95,7 @@ textarea {
   align-items: center;
   justify-content: center;
   gap: 22px;
-  background: radial-gradient(ellipse at 50% 38%, #141b36 0%, #0b0f1e 72%);
+  background: radial-gradient(ellipse at 50% 38%, #141b36 0%, #050505 72%);
   transition: opacity 0.6s ease, transform 0.6s ease;
 }
 
@@ -172,7 +172,7 @@ textarea {
 
 /* Aurora — animated aurora blobs */
 .wp-aurora {
-  background: linear-gradient(135deg, #0b0f1e 0%, #131a35 50%, #1a1030 100%);
+  background: linear-gradient(135deg, #050505 0%, #131a35 50%, #1a1030 100%);
 }
 
 .wp-aurora::before,
@@ -248,7 +248,7 @@ textarea {
 
 /* Dots */
 .wp-dots {
-  background-color: #0b0f1e;
+  background-color: #050505;
   background-image: radial-gradient(circle, rgba(129, 140, 248, 0.3) 1.5px, transparent 1.6px);
   background-size: 26px 26px;
 }
@@ -837,10 +837,10 @@ textarea {
   margin-right: 6px;
 }
 
-.t-user { color: #818cf8; font-weight: 600; }
-.t-path { color: #22d3ee; }
+.t-user { color: #F15A24; font-weight: 600; }
+.t-path { color: #8b95a8; }
 .t-cmd  { color: #e2e8f0; }
-.t-dir  { color: #22d3ee; font-weight: 600; }
+.t-dir  { color: #8b95a8; font-weight: 600; }
 .t-ok   { color: #34d399; }
 .t-err  { color: #f87171; }
 
