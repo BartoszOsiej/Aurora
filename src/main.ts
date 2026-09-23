@@ -500,6 +500,16 @@ async function boot(): Promise<void> {
   const settings = loadSettings();
   applyTheme(settings);
 
+  // Publish settings for the snapshot system (.aurora v2): StateApp reads
+  // them on export and re-applies them on import.
+  (globalThis as { __auroraSettings?: SettingsState }).__auroraSettings = settings;
+  (globalThis as { __auroraApplySettings?: (s: SettingsState) => void }).__auroraApplySettings = (s) => {
+    Object.assign(settings, s);
+    saveSettings(settings);
+    applyTheme(settings);
+    bus.emit(EV.THEME_CHANGED, settings);
+  };
+
   const fs = new FileSystem(true);
   const processes = new ProcessManager();
   const windows = new WindowManager(document.getElementById('windows-layer') as HTMLElement);

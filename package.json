@@ -6,8 +6,8 @@
   "scripts": {
     "build": "esbuild src/main.ts --bundle --minify --outfile=dist/main.js --format=esm && node scripts/copy-assets.mjs",
     "typecheck": "tsc -p tsconfig.json",
-    "build:test": "esbuild src/core/EventBus.ts --bundle --format=esm --outfile=dist-test/EventBus.js && esbuild src/fs/FileSystem.ts --bundle --format=esm --outfile=dist-test/FileSystem.js && esbuild src/term/commands.ts --bundle --format=esm --outfile=dist-test/commands.js",
-    "test": "npm run build:test && node tests/run-tests.mjs",
+    "build:test": "esbuild src/core/EventBus.ts --bundle --format=esm --outfile=dist-test/EventBus.js && esbuild src/fs/FileSystem.ts --bundle --format=esm --outfile=dist-test/FileSystem.js && esbuild src/term/commands.ts --bundle --format=esm --outfile=dist-test/commands.js && esbuild src/core/AuroraState.ts --bundle --format=esm --outfile=dist-test/AuroraState.js",
+    "test": "npm run build:test && node tests/run-tests.mjs && node tests/aurora-state.test.mjs",
     "serve": "python3 -m http.server 8080 --directory ."
   },
   "devDependencies": {

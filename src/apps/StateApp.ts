@@ -1,16 +1,28 @@
 /**
  * StateApp — system snapshot manager (.aurora format).
  *
- * EXPORT: serialises the entire virtual filesystem to a `stan.aurora`
- * document and downloads it (proprietary extension, JSON payload with
- * magic header + version).
- * IMPORT: accepts a dropped/picked .aurora file, validates the magic,
- * replaces the live filesystem and reboots the desktop shell state.
+ * EXPORT: serialises the entire system state (virtual filesystem + settings,
+ * format v2) to a `stan.aurora` document with a SHA-256 checksum and downloads
+ * it (proprietary extension).
+ * IMPORT: accepts a dropped/picked .aurora file, validates magic + version +
+ * checksum, restores the filesystem and desktop settings.
+ * v1 files (filesystem-only) still import; they just carry no settings.
  *
  * The .aurora extension is Hartwell Labs / AURORA OS proprietary.
  */
 
+import { buildStateDocument, verifyStateDocument, type SettingsLike } from '../core/AuroraState';
+
 const SNAPSHOT_DIR = '/home/user/snapshots';
+
+/** Read live desktop settings off the kernel (main.ts publishes them here). */
+const liveSettings = (): SettingsLike | null =>
+  ((globalThis as { __auroraSettings?: SettingsLike }).__auroraSettings ?? null);
+
+/** Push restored settings back into the running desktop. */
+const applySettings = (s: SettingsLike): void => {
+  (globalThis as { __auroraApplySettings?: (s: SettingsLike) => void }).__auroraApplySettings?.(s);
+};
 
 export function createStateApp(ctx: import('../core/AppRegistry').AppContext): HTMLElement {
   const body = document.createElement('div');
@@ -71,16 +83,24 @@ export function createStateApp(ctx: import('../core/AppRegistry').AppContext): H
 
   const stamp = (): string => new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
 
-  // ── EXPORT: download stan.aurora ──
-  body.querySelector<HTMLButtonElement>('#st-export')!.addEventListener('click', () => {
-    const json = ctx.fs.exportState();
-    const blob = new Blob([json], { type: 'application/json' });
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = `stan-${stamp()}.aurora`;
-    a.click();
-    URL.revokeObjectURL(a.href);
-    log(`[${stamp()}] wyeksportowano stan-${stamp()}.aurora (${(json.length / 1024).toFixed(1)} kB)`);
+  // ── EXPORT: download stan.aurora (v2: fs + settings + checksum) ──
+  body.querySelector<HTMLButtonElement>('#st-export')!.addEventListener('click', async () => {
+    const btn = body.querySelector<HTMLButtonElement>('#st-export')!;
+    btn.disabled = true;
+    try {
+      const json = await buildStateDocument({ fsJson: ctx.fs.exportState(), settings: liveSettings() });
+      const blob = new Blob([json], { type: 'application/json' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `stan-${stamp()}.aurora`;
+      a.click();
+      URL.revokeObjectURL(a.href);
+      log(`[${stamp()}] wyeksportowano stan-${stamp()}.aurora (v2, ${(json.length / 1024).toFixed(1)} kB, checksum ✓)`);
+    } catch (e) {
+      log(`[${stamp()}] ✕ eksport nieudany: ${(e as Error).message}`);
+    } finally {
+      btn.disabled = false;
+    }
   });
 
   // ── IMPORT: file picker ──
@@ -90,33 +110,55 @@ export function createStateApp(ctx: import('../core/AppRegistry').AppContext): H
     const f = fileInput.files?.[0];
     if (!f) return;
     const reader = new FileReader();
-    reader.onload = () => {
-      const ok = ctx.fs.importState(String(reader.result ?? ''));
-      if (ok) log(`[${stamp()}] zaimportowano ${f.name} ✓ — system przywrócony`);
-      else log(`[${stamp()}] ✕ ${f.name}: niepoprawny plik .aurora (magic/version)`);
+    reader.onload = async () => {
+      const doc = String(reader.result ?? '');
+      const verdict = await verifyStateDocument(doc);
+      if (!verdict.ok) {
+        log(`[${stamp()}] ✕ ${f.name}: ${verdict.reason}`);
+        fileInput.value = '';
+        return;
+      }
+      const fsOk = ctx.fs.importState(JSON.stringify({ magic: 'AURORA-STATE', version: 1, fs: verdict.fs }));
+      let settingsNote = '';
+      if (verdict.settings) {
+        applySettings(verdict.settings);
+        settingsNote = ' + ustawienia przywrócone';
+      }
+      if (fsOk) {
+        log(`[${stamp()}] zaimportowano ${f.name} ✓ (v${verdict.version}${settingsNote})`);
+      } else {
+        log(`[${stamp()}] ✕ ${f.name}: FS ok, ale import systemu plików nie powiódł się`);
+      }
       fileInput.value = '';
       fileList();
     };
     reader.readAsText(f);
   });
 
-  // ── LOCAL snapshots inside the FS ──
-  body.querySelector<HTMLButtonElement>('#st-save-local')!.addEventListener('click', () => {
+  // ── LOCAL snapshots inside the FS (v2 documents) ──
+  body.querySelector<HTMLButtonElement>('#st-save-local')!.addEventListener('click', async () => {
     try {
       if (!ctx.fs.exists(SNAPSHOT_DIR)) ctx.fs.mkdir(SNAPSHOT_DIR);
     } catch { /* exists */ }
     const name = `snap-${stamp()}.aurora`;
-    ctx.fs.writeFile(`${SNAPSHOT_DIR}/${name}`, ctx.fs.exportState());
-    log(`[${stamp()}] zapisano lokalnie: ${SNAPSHOT_DIR}/${name}`);
+    const json = await buildStateDocument({ fsJson: ctx.fs.exportState(), settings: liveSettings() });
+    ctx.fs.writeFile(`${SNAPSHOT_DIR}/${name}`, json);
+    log(`[${stamp()}] zapisano lokalnie: ${SNAPSHOT_DIR}/${name} (v2)`);
     fileList();
   });
 
-  const restoreLocal = (name: string): void => {
+  const restoreLocal = async (name: string): Promise<void> => {
     if (!name) return;
     try {
-      const json = ctx.fs.readFile(`${SNAPSHOT_DIR}/${name}`);
-      const ok = ctx.fs.importState(json);
-      log(`[${stamp()}] przywrócono ${name}: ${ok ? '✓' : '✕ błąd formatu'}`);
+      const doc = ctx.fs.readFile(`${SNAPSHOT_DIR}/${name}`);
+      const verdict = await verifyStateDocument(doc);
+      if (!verdict.ok) {
+        log(`[${stamp()}] ✕ ${name}: ${verdict.reason}`);
+        return;
+      }
+      const ok = ctx.fs.importState(JSON.stringify({ magic: 'AURORA-STATE', version: 1, fs: verdict.fs }));
+      if (ok && verdict.settings) applySettings(verdict.settings);
+      log(`[${stamp()}] przywrócono ${name} (v${verdict.version}): ${ok ? '✓' : '✕ błąd FS'}`);
     } catch (e) {
       log(`[${stamp()}] ✕ ${name}: ${(e as Error).message}`);
     }
