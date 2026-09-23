@@ -18,7 +18,7 @@
 [![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/BartoszOsiej/Aurora/badge)](https://scorecard.dev/viewer/?uri=github.com/BartoszOsiej/Aurora)
 
 *A from-scratch desktop environment — window manager, virtual file system,
-shell, and ten applications — entirely in TypeScript with **zero runtime
+shell, and fourteen applications — entirely in TypeScript with **zero runtime
 dependencies**. No frameworks, no bundler at runtime, no server.*
 
 > 🇵🇱 [Wersja polska](README.pl.md) · [Documentation](https://bartoszosiej.github.io/Docs/projects/aurora-os/) · [Live Demo](https://bartoszosiej.github.io/Aurora/)
@@ -110,7 +110,7 @@ npm run serve        # http://localhost:8080
 │                                                               │
 │  ┌────────────┐   ┌─────────────┐   ┌───────────────────┐     │
 │  │ WindowMgr  │   │ ProcessMgr  │   │    AppRegistry    │     │
-│  │ drag/resize│   │ pid/ps/kill │   │ 10 apps registered │     │
+│  │ drag/resize│   │ pid/ps/kill │   │ 14 apps registered │     │
 │  └─────┬──────┘   └──────┬──────┘   └────────┬──────────┘     │
 │        └─────────────────┼───────────────────┘                 │
 │                     ┌────▼─────┐                         ┌─────▼─────┐

@@ -31,6 +31,11 @@ import { createMonitorApp } from './apps/MonitorApp';
 import { createAboutApp } from './apps/AboutApp';
 import { createClockApp } from './apps/ClockApp';
 import { createMarkdownApp } from './apps/MarkdownApp';
+import { createBrowserApp } from './apps/BrowserApp';
+import { createMinesweeperApp } from './apps/MinesweeperApp';
+import { createSnakeApp } from './apps/SnakeApp';
+import { createTasksApp } from './apps/TasksApp';
+import { createStateApp } from './apps/StateApp';
 
 /* ------------------------------------------------------------------ *
  * Boot helpers
@@ -139,6 +144,32 @@ function registerApps(registry: AppRegistry): void {
     width: 860,
     height: 540,
     category: 'Tools',
+  });
+  A('browser', 'Browser', '🌐', 'Sandboxed web browser', createBrowserApp, {
+    width: 900,
+    height: 600,
+    category: 'Tools',
+  });
+  A('tasks', 'Tasks', '✅', 'Task tracker (saved to /home/user)', createTasksApp, {
+    width: 520,
+    height: 480,
+    category: 'Tools',
+  });
+  A('state', 'Snapshots', '💾', 'Save & restore system state (.aurora)', createStateApp, {
+    width: 560,
+    height: 540,
+    singleInstance: true,
+    category: 'System',
+  });
+  A('mines', 'Minesweeper', '💣', 'Classic minesweeper (flags: right-click)', createMinesweeperApp, {
+    width: 400,
+    height: 480,
+    category: 'Games',
+  });
+  A('snake', 'Snake', '🐍', 'Arcade snake (arrows/WASD, P = pause)', createSnakeApp, {
+    width: 520,
+    height: 440,
+    category: 'Games',
   });
 }
 

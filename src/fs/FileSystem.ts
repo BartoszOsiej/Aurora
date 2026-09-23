@@ -149,6 +149,54 @@ export class FileSystem {
     }
   }
 
+  /** Serialise the whole filesystem to a portable state document. */
+  exportState(): string {
+    const snapshot: Record<string, unknown> = {};
+    const flatten = (node: FSNode): unknown => {
+      if (node.kind === 'file') return { kind: 'file', content: node.content, mtime: node.mtime };
+      const children: Record<string, unknown> = {};
+      for (const [name, child] of node.children ?? []) children[name] = flatten(child);
+      return { kind: 'dir', children, mtime: node.mtime };
+    };
+    snapshot['/'] = flatten(this.root);
+    return JSON.stringify(
+      { magic: 'AURORA-STATE', version: 1, exported: new Date().toISOString(), fs: snapshot },
+      null,
+      2,
+    );
+  }
+
+  /** Replace the live filesystem with a state document (see exportState). */
+  importState(stateJson: string): boolean {
+    try {
+      const parsed = JSON.parse(stateJson) as { magic?: string; version?: number; fs?: Record<string, unknown> };
+      if (parsed.magic !== 'AURORA-STATE' || parsed.version !== 1 || typeof parsed.fs !== 'object' || parsed.fs === null) return false;
+      const rootRaw = parsed.fs['/'] as { kind?: string } | undefined;
+      if (!rootRaw || rootRaw.kind !== 'dir') return false;
+      const revive = (raw: unknown, name: string): FSNode | null => {
+        const n = raw as { kind?: string; content?: string; mtime?: number; children?: Record<string, unknown> };
+        if (n.kind === 'file') return { kind: 'file', name, content: n.content ?? '', mtime: n.mtime ?? Date.now() };
+        if (n.kind === 'dir') {
+          const children = new Map<string, FSNode>();
+          for (const [childName, childRaw] of Object.entries(n.children ?? {})) {
+            const child = revive(childRaw, childName);
+            if (child) children.set(childName, child);
+          }
+          return { kind: 'dir', name, children, mtime: n.mtime ?? Date.now() };
+        }
+        return null;
+      };
+      const newRoot = revive(rootRaw, '/');
+      if (!newRoot) return false;
+      this.root = newRoot;
+      this.save();
+      this.notify();
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
   wipe(): void {
     if (typeof localStorage !== 'undefined') localStorage.removeItem(STORAGE_KEY);
     this.root = seedRoot();
