@@ -3,7 +3,7 @@
 **Kompletny system operacyjny działający w przeglądarce.**
 
 AURORA OS to środowisko graficzne napisane od zera — menedżer okien, wirtualny
-system plików, shell i osiem aplikacji — w całości w TypeScript, z **zerową
+system plików, shell i dziesięć aplikacji — w całości w TypeScript, z **zerową
 liczbą zależności w czasie działania**. Bez frameworków, bez bundlera
 w runtime, bez serwera: jądro bootuje, renderuje i utrwala stan w całości
 w przeglądarce.
