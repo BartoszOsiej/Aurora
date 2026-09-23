@@ -21,7 +21,7 @@
 shell, and eight applications — entirely in TypeScript with **zero runtime
 dependencies**. No frameworks, no bundler at runtime, no server.*
 
-> 🇵🇱 [Wersja polska](README.pl.md) · [Documentation](https://bartoszosiej.github.io/Docs/projects/aurora-os/) · [Live Demo](https://bartoszosiej.github.io/AURORA-OS/)
+> 🇵🇱 [Wersja polska](README.pl.md) · [Documentation](https://bartoszosiej.github.io/Docs/projects/aurora-os/) · [Live Demo](https://bartoszosiej.github.io/Aurora/)
 
 > *"Your browser is now your computer."*
 
@@ -71,7 +71,7 @@ dependencies**. No frameworks, no bundler at runtime, no server.*
 
 ```bash
 git clone https://github.com/BartoszOsiej/Aurora.git
-cd AURORA-OS
+cd Aurora
 npm install          # installs esbuild (dev-only build tool)
 npm run build        # bundles to dist/
 npm run serve        # http://localhost:8080
