@@ -1,7 +1,7 @@
 {
   "name": "aurora-os",
-  "version": "1.0.0",
-  "description": "Aurora — a complete operating system in the browser. Window manager, virtual file system, terminal with 35+ commands, 8 applications, themes, wallpapers and procedural audio. TypeScript, zero runtime dependencies.",
+  "version": "1.1.0",
+  "description": "Aurora \u2014 a complete operating system in the browser. Window manager, virtual file system, terminal with 35+ commands, 8 applications, themes, wallpapers and procedural audio. TypeScript, zero runtime dependencies.",
   "type": "module",
   "scripts": {
     "build": "esbuild src/main.ts --bundle --minify --outfile=dist/main.js --format=esm && node scripts/copy-assets.mjs",
