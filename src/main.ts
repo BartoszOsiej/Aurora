@@ -29,6 +29,8 @@ import { createPaintApp } from './apps/PaintApp';
 import { createSettingsApp } from './apps/SettingsApp';
 import { createMonitorApp } from './apps/MonitorApp';
 import { createAboutApp } from './apps/AboutApp';
+import { createClockApp } from './apps/ClockApp';
+import { createMarkdownApp } from './apps/MarkdownApp';
 
 /* ------------------------------------------------------------------ *
  * Boot helpers
@@ -127,6 +129,16 @@ function registerApps(registry: AppRegistry): void {
     resizable: false,
     singleInstance: true,
     category: 'System',
+  });
+  A('clock', 'Clock', '🕐', 'Analog clock, world time & stopwatch', createClockApp, {
+    width: 480,
+    height: 300,
+    category: 'Tools',
+  });
+  A('markdown', 'Markdown', '📄', 'Live Markdown editor with preview', createMarkdownApp, {
+    width: 860,
+    height: 540,
+    category: 'Tools',
   });
 }
 
