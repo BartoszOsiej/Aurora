@@ -21,7 +21,7 @@
 shell, and fourteen applications — entirely in TypeScript with **zero runtime
 dependencies**. No frameworks, no bundler at runtime, no server.*
 
-> 🇵🇱 [Wersja polska](README.pl.md) · [Documentation](https://bartoszosiej.github.io/Docs/projects/aurora-os/) · [Live Demo](https://bartoszosiej.github.io/Aurora/)
+> 🇵🇱 [Wersja polska](README.pl.md) · [Documentation](https://bartoszosiej.github.io/Docs/projects/aurora-os/) · [Live Demo](https://hartwell-labs.pl/Aurora/)
 
 > *"Your browser is now your computer."*
 
