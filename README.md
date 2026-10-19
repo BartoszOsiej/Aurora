@@ -1,3 +1,13 @@
+> **Moved.** This repository now lives at
+> [`Hartwell-Labs/Aurora`](https://github.com/Hartwell-Labs/Aurora).
+> GitHub redirects the old address, so old links still work — but a
+> redirect is invisible. Anyone arriving from a bookmark never learns the
+> project moved, or that it is maintained from the organisation rather than
+> from a personal account.
+>
+> Copyright and history are unchanged. The repository was transferred, not
+> copied, so every commit, release, tag and issue came with it.
+
 <div align="center">
 
 <img src="https://capsule-render.vercel.app/api?type=hollow&color=0:2cb67d,50:7f5af0,100:0d1117&height=140&section=header&text=Aurora&fontSize=38&fontColor=7f5af0&desc=a%20complete%20operating%20system%20running%20in%20your%20browser&descSize=15&descAlignY=72" width="100%" />
